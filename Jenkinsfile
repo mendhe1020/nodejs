@@ -47,13 +47,5 @@ pipeline {
                 }
             }
         }
-
-        Post 
-        {
-            always
-            {
-              emailext body: 'yee!', subject: 'regarding cicd pipeline', to: 'anurag.mendhe11@gmail.com'
-            }
-        }
     }
 }
