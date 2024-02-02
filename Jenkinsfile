@@ -1,11 +1,11 @@
 pipeline {
     agent any
-
+    
     stages {
         stage('Pull Code') {
             steps {
                 // Checkout the source code from the repository
-                git 'https://github.com/mendhe1020/nodejs.git/'
+                git branch: '*/Staging', credentialsId: 'mendhe1020', url: 'https://github.com/mendhe1020/nodejs.git'
             }
         }
 
@@ -24,12 +24,33 @@ pipeline {
             }
         }
 
-        stage('Deploy in VM') {
+        stage('Deploy to Staging') {
+            when {
+                branch 'Staging'
+            }
             steps {
-                // Add your deployment commands here
-                sh 'echo "Deployment in VM"'
-                // Example: deploy your application to the VM
-                // sh 'npm run deploy'
+                // Add deployment steps specific to the Staging environment
+                sh 'echo "Deploying to Staging"'
+            }
+        }
+
+        stage('Deploy to Development') {
+            when {
+                branch 'development'
+            }
+            steps {
+                // Add deployment steps specific to the Development environment
+                sh 'echo "Deploying to Development"'
+            }
+        }
+
+        stage('Deploy to Production') {
+            when {
+                branch 'production'
+            }
+            steps {
+                // Add deployment steps specific to the Production environment
+                sh 'echo "Deploying to Production"'
             }
         }
     }
