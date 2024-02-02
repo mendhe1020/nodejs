@@ -5,7 +5,7 @@ pipeline {
         stage('Pull Code') {
             steps {
                 // Checkout the code from the Git repository
-                git branch: 'Staging', credentialsId: 'mendhe1020', url: 'https://github.com/mendhe1020/nodejs.git'
+                git branch: 'master', credentialsId: 'mendhe1020', url: 'https://github.com/mendhe1020/nodejs.git'
             }
         }
 
