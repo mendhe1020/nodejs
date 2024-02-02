@@ -2,22 +2,10 @@ pipeline {
     agent any
 
     stages {
-        stage('Deploy to Target Server') {
+        stage('Pull Code') {
             steps {
-                script {
-                    // Copy SSH key to Jenkins user's home directory
-                    sh "sudo cp /root/.ssh/id_rsa /var/lib/jenkins/.ssh/"
-                    sh "sudo chown jenkins:jenkins /var/lib/jenkins/.ssh/id_rsa"
-
-                    // Create an SSH configuration file to disable strict host key checking
-                    sh 'echo "Host *\n  StrictHostKeyChecking no" > /var/lib/jenkins/.ssh/config'
-
-                    // Use ssh-agent to run the SSH command
-                    sshagent(credentials: [SSH_KEY]) {
-                        // Run the command as the jenkins user without sudo
-                        sh "ssh -i /var/lib/jenkins/.ssh/id_rsa ${TARGET_SERVER} 'mkdir -p ${BASE_TARGET_DIR}/${env.BRANCH_NAME.toLowerCase()}'"
-                    }
-                }
+                // Checkout the source code from the repository
+                git 'https://github.com/mendhe1020/nodejs.git/'
             }
         }
 
@@ -36,16 +24,22 @@ pipeline {
             }
         }
 
-        stage('Deploy Node.js Project') {
+        stage('Deploy in VM') {
             steps {
-                script {
-                    // Assuming your Node.js project is in the current workspace
-                    def workspace = pwd()
-
-                    // Use rsync to copy the project to the target server
-                    sh "rsync -r -e 'ssh -i /var/lib/jenkins/.ssh/id_rsa' ${workspace}/ ${TARGET_SERVER}:${BASE_TARGET_DIR}/${env.BRANCH_NAME.toLowerCase()}/"
-                }
+                // Add your deployment commands here
+                sh 'echo "Deployment in VM"'
+                // Example: deploy your application to the VM
+                // sh 'npm run deploy'
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment successful'
+        }
+        failure {
+            echo 'Deployment failed'
         }
     }
 }
