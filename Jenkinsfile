@@ -1,11 +1,11 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Pull Code') {
             steps {
-                // Checkout the source code from the repository
-                git branch: '*/Staging', credentialsId: 'mendhe1020', url: 'https://github.com/mendhe1020/nodejs.git'
+                // Checkout the code from the Git repository
+                git branch: 'development', credentialsId: 'mendhe1020, url: 'https://github.com/mendhe1020/nodejs.git'
             }
         }
 
@@ -13,7 +13,6 @@ pipeline {
             steps {
                 script {
                     // Install Node.js using the NodeJS Jenkins plugin
-                    // 'nodejs' should match the tool name you configured in Jenkins
                     def nodejsInstallation = tool name: 'nodejs', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
                     def nodejsHome = "${nodejsInstallation}/bin"
                     env.PATH = "${nodejsHome}:${env.PATH}"
@@ -24,43 +23,20 @@ pipeline {
             }
         }
 
-        stage('Deploy to Staging') {
-            when {
-                branch 'Staging'
-            }
+        stage('Start Node.js Service') {
             steps {
-                // Add deployment steps specific to the Staging environment
-                sh 'echo "Deploying to Staging"'
-            }
-        }
-
-        stage('Deploy to Development') {
-            when {
-                branch 'development'
-            }
-            steps {
-                // Add deployment steps specific to the Development environment
-                sh 'echo "Deploying to Development"'
-            }
-        }
-
-        stage('Deploy to Production') {
-            when {
-                branch 'production'
-            }
-            steps {
-                // Add deployment steps specific to the Production environment
-                sh 'echo "Deploying to Production"'
+                // Start the Node.js service
+                sh 'node app.js &'  // Assuming your Node.js application entry point is app.js
             }
         }
     }
 
     post {
         success {
-            echo 'Deployment successful'
+            echo 'All steps executed successfully'
         }
         failure {
-            echo 'Deployment failed'
+            echo 'One or more steps failed'
         }
     }
 }
