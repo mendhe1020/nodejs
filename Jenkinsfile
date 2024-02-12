@@ -1,36 +1,37 @@
 pipeline {
     agent any
-
+    
     stages {
-        stage('Pull Code') {
+        stage('Build') {
             steps {
-                script {
-                    // Step 1: Pull the code from the 'Staging' branch
-                    checkout scm
-                }
+                // Replace this with your build commands
+                sh 'echo "Building..."'
             }
         }
-        stage('Install Node.js and npm') {
+        stage('Test') {
             steps {
-                script {
-                    try {
-                        // Step 2: Install Node.js and npm
-                        sh '''
-                            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-                            export NVM_DIR="$HOME/.nvm"
-                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                            [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
-                            nvm install node # Install the latest version of Node.js
-                            npm install -g npm # Install the latest version of npm
-                        '''
-                    } catch (Exception e) {
-                        // Catch and handle any errors during installation
-                        echo "Error during Node.js and npm installation: ${e.message}"
-                        currentBuild.result = 'FAILURE'
-                        error("Failed to install Node.js and npm")
-                    }
-                }
+                // Replace this with your test commands
+                sh 'echo "Testing..."'
             }
+        }
+        stage('Deploy') {
+            steps {
+                // Replace this with your deployment commands
+                sh 'echo "Deploying..."'
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline succeeded! Yay!'
+        }
+        failure {
+            echo 'Pipeline failed! Oh no!'
+        }
+        always {
+            // This block will always be executed, regardless of the pipeline's outcome
+            echo 'Cleaning up...'
         }
     }
 }
