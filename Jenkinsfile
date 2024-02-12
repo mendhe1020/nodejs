@@ -6,7 +6,7 @@ pipeline {
             steps {
                 // Replace this with your build commands
                 sh 'echo "Building..."'
-                 git 'https://github.com/mendhe1020/nodejs.git'
+                 git 'https://github.com/mendhe1020/nodejs.git', branch: branchName
             }
         }
         stage('Test') {
