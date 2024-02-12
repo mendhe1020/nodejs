@@ -2,23 +2,28 @@ pipeline {
     agent any
     
     stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from the repository
+                git branch: "${env.BRANCH_NAME}", url: 'https://github.com/mendhe1020/nodejs.git'
+            }
+        }
         stage('Build') {
             steps {
                 // Replace this with your build commands
-                sh 'echo "Building..."'
-                 git 'https://github.com/mendhe1020/nodejs.git', branch: branchName
+                sh 'npm install'
             }
         }
         stage('Test') {
             steps {
                 // Replace this with your test commands
-                sh 'echo "Testing..."'
+                sh 'npm test'
             }
         }
         stage('Deploy') {
             steps {
                 // Replace this with your deployment commands
-                sh 'echo "Deploying..."'
+                sh 'npm run deploy'
             }
         }
     }
